@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+<h:head>
+	<title>Rush Management System</title>
+	<h:outputScript name="test.js" />
+</h:head>
+<h:body>
+	<style type="text/css">
+.ui-dashboard {
+	display: flex;
+	justify-content: center;
+}
+
+.ui-dashboard-column {
+	width: 300px;
+}
+
+.ui-panel {
+	margin: 10px;
+}
+
+.ui-inputfield {
+	font-weight: normal;
+	width: 100%;
+	margin: 5px 0 10px 0;
+}
+</style>
+	<h:form id="frmTest">
+		<p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
+
+		<p:dashboard id="board" model="#{rushMgmtView.model}"
+			styleClass="center-screen">
+			<p:ajax event="reorder" listener="#{rushMgmtView.handleReorder}"
+				update="msgs" />
+
+			<p:panel id="availableSlots" header="Available Slots">
+				<p:outputLabel for="slottime" value="Select Date / Time " />
+				<p:datePicker id="slottime" value="#{rushMgmtView.slottime}"
+					showButtonBar="true" showTime="true" style="width:100%" />
+				<p:commandButton value="Search Available Slots" style="width:100%"
+					action="#{rushMgmtView.retrieveSlots}" update="slottime2" />
+
+				<p:outputPanel deferred="true" id="slottime2">
+					<p:repeat value="#{rushMgmtView.availableSlots}" var="slots">
+						<p:commandButton id="bookslot" value="#{slots.availSlot}"
+							styleClass="ui-button-outlined ui-button-warning"
+							actionListener="#{rushMgmtView.bookSlot}"
+							style="margin:10px 0 0 0;width:100%" process="@this" />
+					</p:repeat>
+				</p:outputPanel>
+
+			</p:panel>
+
+			<p:panel id="bookSlotOnline" header="Book Slot Online">
+				<p:outputLabel for="onName" value="Enter you Name " />
+				<p:inputText id="onName" value="#{rushMgmtView.onName}" />
+				<p:outputLabel for="onMob" value="Mobile No " />
+				<p:inputNumber id="onMob" value="#{rushMgmtView.onMob}" />
+				<p:outputLabel for="onBooktime" value="Select Booking Time " />
+				<p:datePicker id="onBooktime" value="#{rushMgmtView.booktime}"
+					showButtonBar="true" showTime="true" style="width:100%" />
+				<p:commandButton type="button" value="Book Slot" style="width:100%" />
+			</p:panel>
+
+			<p:panel id="cancelSlot" header="Cancel Slot">
+				<p:outputLabel for="onTokenCancel" value="Enter Token No " />
+				<p:inputText id="onTokenCancel" value="#{rushMgmtView.onToken}" />
+				<p:commandButton type="button" value="Cancel Slot"
+					style="width:100%" />
+			</p:panel>
+
+			<p:panel id="bookSlotOffline" header="Book Slot Offline">
+				<p:outputLabel for="ofName" value="Enter you Name " />
+				<p:inputText id="ofName" value="#{rushMgmtView.onName}" />
+				<p:outputLabel for="ofMob" value="Mobile No " />
+				<p:inputNumber id="ofMob" value="#{rushMgmtView.onMob}" />
+				<p:outputLabel for="ofBooktime" value="Select Booking Time " />
+				<p:datePicker id="ofBooktime" value="#{rushMgmtView.booktime}"
+					showButtonBar="true" showTime="true" style="width:100%" />
+				<p:commandButton type="button" value="Book Slot" style="width:100%" />
+			</p:panel>
+
+			<p:panel id="updateSlot" header="Update Slot">
+				<p:outputLabel for="ofTokenUpdate" value="Enter Token No " />
+				<p:inputText id="ofTokenUpdate" value="#{rushMgmtView.onToken}" />
+				<p:commandButton type="button" value="Update Slot"
+					style="width:100%" />
+			</p:panel>
+
+			<p:panel id="releaseSlot" header="Release Slot">
+				<p:outputLabel for="ofTokenRelease" value="Enter Token No " />
+				<p:inputText id="ofTokenRelease" value="#{rushMgmtView.onToken}" />
+				<p:commandButton type="button" value="Release Slot"
+					style="width:100%" />
+			</p:panel>
+		</p:dashboard>
+
+		<div style="clear: both" />
+	</h:form>
+
+</h:body>
+</html>
