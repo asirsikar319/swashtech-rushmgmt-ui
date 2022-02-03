@@ -36,12 +36,6 @@ import lombok.Data;
 public class RushMgmtView implements Serializable {
 
 	private DashboardModel model;
-	private Date slottime;
-	private String onName;
-	private Integer onMob;
-	private Date booktime;
-	private String onToken;
-	private List<Slots> availableSlots;
 
 	public RushMgmtView() {
 		System.err.println("RushMgmtView Constructor");
@@ -55,12 +49,12 @@ public class RushMgmtView implements Serializable {
 		DashboardColumn column3 = new DefaultDashboardColumn();
 
 		column1.addWidget("availableSlots");
+		column1.addWidget("bookSlotOnline");
 
-		column2.addWidget("bookSlotOnline");
+		column2.addWidget("updateSlot");
 		column2.addWidget("cancelSlot");
-
+		
 		column3.addWidget("bookSlotOffline");
-		column3.addWidget("updateSlot");
 		column3.addWidget("releaseSlot");
 
 		model.addColumn(column1);
@@ -92,31 +86,7 @@ public class RushMgmtView implements Serializable {
 		addMessage(message);
 	}
 
-	public void retrieveSlots() {
-		try {
-			System.out.println("Retrieve Slots : " + slottime);
-
-			String str = "{\r\n" + "	\"orgId\" : \"ORG001\",\r\n" + "	\"oprId\" : \"ORG001-OPR001\",\r\n"
-					+ "	\"timestamp\" : 1642354380000\r\n" + "}";
-			RestClient restClient = new RestClient();
-			String str2 = restClient.callRestApi(CommonUtils.getValueFromConfig("availableslotEndpoint"), "POST", str);
-			JSONObject jsonObject = new JSONObject(str2);
-			System.err.println("jsonObject : " + jsonObject);
-			availableSlots = new ArrayList<Slots>();
-			jsonObject.getJSONArray("availableInDuration").forEach(item -> {
-				availableSlots.add(new Slots(new Date(Long.parseLong(String.valueOf(item)))));
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void bookSlot(ActionEvent event) {
-		System.out.println("test");
-		System.err.println(event.getComponent().getId());
-	}
-
-	private void addMessage(FacesMessage message) {
+	public void addMessage(FacesMessage message) {
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
@@ -124,51 +94,4 @@ public class RushMgmtView implements Serializable {
 		return model;
 	}
 
-	public Date getSlottime() {
-		return slottime;
-	}
-
-	public void setSlottime(Date slottime) {
-		this.slottime = slottime;
-	}
-
-	public String getOnName() {
-		return onName;
-	}
-
-	public void setOnName(String onName) {
-		this.onName = onName;
-	}
-
-	public Integer getOnMob() {
-		return onMob;
-	}
-
-	public void setOnMob(Integer onMob) {
-		this.onMob = onMob;
-	}
-
-	public Date getBooktime() {
-		return booktime;
-	}
-
-	public void setBooktime(Date booktime) {
-		this.booktime = booktime;
-	}
-
-	public String getOnToken() {
-		return onToken;
-	}
-
-	public void setOnToken(String onToken) {
-		this.onToken = onToken;
-	}
-
-	public List<Slots> getAvailableSlots() {
-		return availableSlots;
-	}
-
-	public void setAvailableSlots(List<Slots> availableSlots) {
-		this.availableSlots = availableSlots;
-	}
 }

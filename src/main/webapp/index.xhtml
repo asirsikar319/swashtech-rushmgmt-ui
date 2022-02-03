@@ -18,6 +18,7 @@
 
 .ui-dashboard-column {
 	width: 300px;
+	padding-bottom: 0px;
 }
 
 .ui-panel {
@@ -29,79 +30,167 @@
 	width: 100%;
 	margin: 5px 0 10px 0;
 }
+
+.ui-dialog .ui-dialog-content {
+	padding: 0 20px 15px 20px !important;
+}
+
+.mytable, table.mytable th, table.mytable td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	width: 100%;
+	padding: 2px 10px 2px 10px;
+	margin: 10px 0;
+	text-align: center;
+}
 </style>
-	<h:form id="frmTest">
-		<p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-		<p:dashboard id="board" model="#{rushMgmtView.model}"
-			styleClass="center-screen">
-			<p:ajax event="reorder" listener="#{rushMgmtView.handleReorder}"
-				update="msgs" />
+	<p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"
+		life="10000" keepAlive="true" />
 
-			<p:panel id="availableSlots" header="Available Slots">
-				<p:outputLabel for="slottime" value="Select Date / Time " />
-				<p:datePicker id="slottime" value="#{rushMgmtView.slottime}"
-					showButtonBar="true" showTime="true" style="width:100%" />
-				<p:commandButton value="Search Available Slots" style="width:100%"
-					action="#{rushMgmtView.retrieveSlots}" update="slottime2" />
+	<p:dashboard id="board" model="#{rushMgmtView.model}"
+		styleClass="center-screen">
+		<p:ajax event="reorder" listener="#{rushMgmtView.handleReorder}"
+			update="msgs" />
 
-				<p:outputPanel deferred="true" id="slottime2">
-					<p:repeat value="#{rushMgmtView.availableSlots}" var="slots">
-						<p:commandButton id="bookslot" value="#{slots.availSlot}"
-							styleClass="ui-button-outlined ui-button-warning"
-							actionListener="#{rushMgmtView.bookSlot}"
-							style="margin:10px 0 0 0;width:100%" process="@this" />
-					</p:repeat>
-				</p:outputPanel>
+		<p:panel id="availableSlots" header="Search Available Slots">
+			<h:form id="frm1">
+				<p:outputLabel for="dpavSTime" value="Select Date / Time" />
+				<p:datePicker id="dpavSTime" value="#{availableSlotBean.timestamp}"
+					required="true" requiredMessage="Please Select Date"
+					showTime="true" style="width:100%"
+					mindate="#{availableSlotBean.minDate}" 
+					maxdate="#{availableSlotBean.maxDate}" />
+				<p:commandButton id="btnSearchSlot" value="Search"
+					style="width:100%" action="#{availableSlotBean.retrieveSlots}"
+					update="msgs frm8" />
+			</h:form>
+		</p:panel>
 
-			</p:panel>
+		<p:panel id="bookSlotOnline" header="Book Slot Online">
+			<h:form id="frm2">
+				<p:outputLabel for="inpTxtbsOnName" value="Enter Your Name" />
+				<p:inputText id="inpTxtbsOnName" required="true"
+					requiredMessage="Please Enter Your Name"
+					value="#{bookSlotOnlineBean.onName}" />
+				<p:outputLabel for="inpTxtbsOnMob" value="Mobile No" />
+				<p:inputNumber thousandSeparator="" padControl="false"
+					required="true" requiredMessage="Please Enter Mobile No"
+					id="inpTxtbsOnMob" value="#{bookSlotOnlineBean.onMob}" />
+				<p:outputLabel for="dpbsOnTime" value="Select Booking Time" />
+				<p:datePicker id="dpbsOnTime" value="#{bookSlotOnlineBean.booktime}"
+					required="true" requiredMessage="Please Select Booking Time"
+					showButtonBar="true" showTime="true" style="width:100%"
+					pattern="dd/MM/yyyy HH:mm:ss.SSS" />
+				<p:commandButton id="btnBookOnlineSlot" value="Book Slot"
+					action="#{bookSlotOnlineBean.bookSlot}" style="width:100%"
+					update="msgs bookSlotOnline" />
+			</h:form>
+		</p:panel>
 
-			<p:panel id="bookSlotOnline" header="Book Slot Online">
-				<p:outputLabel for="onName" value="Enter you Name " />
-				<p:inputText id="onName" value="#{rushMgmtView.onName}" />
-				<p:outputLabel for="onMob" value="Mobile No " />
-				<p:inputNumber id="onMob" value="#{rushMgmtView.onMob}" />
-				<p:outputLabel for="onBooktime" value="Select Booking Time " />
-				<p:datePicker id="onBooktime" value="#{rushMgmtView.booktime}"
-					showButtonBar="true" showTime="true" style="width:100%" />
-				<p:commandButton type="button" value="Book Slot" style="width:100%" />
-			</p:panel>
+		<p:panel id="cancelSlot" header="Cancel Slot">
+			<h:form id="frm3">
+				<p:outputLabel for="inpTxtCancelTkn" value="Enter Token No" />
+				<p:inputText id="inpTxtCancelTkn" value="#{cancelSlotBean.tokenNo}"
+					required="true" requiredMessage="Please Enter Token Number" />
+				<p:commandButton id="btnCancelSlot" value="Cancel Slot"
+					action="#{cancelSlotBean.cancelSlot}" style="width:100%"
+					update="msgs cancelSlot" />
+			</h:form>
+		</p:panel>
 
-			<p:panel id="cancelSlot" header="Cancel Slot">
-				<p:outputLabel for="onTokenCancel" value="Enter Token No " />
-				<p:inputText id="onTokenCancel" value="#{rushMgmtView.onToken}" />
-				<p:commandButton type="button" value="Cancel Slot"
-					style="width:100%" />
-			</p:panel>
+		<p:panel id="bookSlotOffline" header="Book Slot Offline">
+			<h:form id="frm4">
+				<p:outputLabel for="inpTxtbsOfName" value="Enter Your Name" />
+				<p:inputText id="inpTxtbsOfName" required="true"
+					requiredMessage="Please Enter Your Name"
+					value="#{bookSlotOfflineBean.onName}" />
+				<p:outputLabel for="inpTxtbsOfMob" value="Mobile No" />
+				<p:inputNumber thousandSeparator="" padControl="false"
+					required="true" requiredMessage="Please Enter Mobile No"
+					id="inpTxtbsOfMob" value="#{bookSlotOfflineBean.onMob}" />
+				<p:commandButton id="btnBookOfflineSlot" value="Book Slot"
+					action="#{bookSlotOfflineBean.bookSlot}" style="width:100%"
+					update="msgs bookSlotOffline" />
+			</h:form>
+		</p:panel>
 
-			<p:panel id="bookSlotOffline" header="Book Slot Offline">
-				<p:outputLabel for="ofName" value="Enter you Name " />
-				<p:inputText id="ofName" value="#{rushMgmtView.onName}" />
-				<p:outputLabel for="ofMob" value="Mobile No " />
-				<p:inputNumber id="ofMob" value="#{rushMgmtView.onMob}" />
-				<p:outputLabel for="ofBooktime" value="Select Booking Time " />
-				<p:datePicker id="ofBooktime" value="#{rushMgmtView.booktime}"
-					showButtonBar="true" showTime="true" style="width:100%" />
-				<p:commandButton type="button" value="Book Slot" style="width:100%" />
-			</p:panel>
+		<p:panel id="updateSlot" header="Update Slot">
+			<h:form id="frm5">
+				<p:outputLabel for="inpTxtUpdateTkn" value="Enter Token No" />
+				<p:inputText id="inpTxtUpdateTkn" value="#{updateSlotBean.tokenNo}"
+					required="true" requiredMessage="Please Enter Token Number" />
+				<p:commandButton id="btnUpdateSlot" value="Update Slot"
+					action="#{updateSlotBean.updateSlot}" style="width:100%"
+					update="msgs updateSlot" />
+			</h:form>
+		</p:panel>
 
-			<p:panel id="updateSlot" header="Update Slot">
-				<p:outputLabel for="ofTokenUpdate" value="Enter Token No " />
-				<p:inputText id="ofTokenUpdate" value="#{rushMgmtView.onToken}" />
-				<p:commandButton type="button" value="Update Slot"
-					style="width:100%" />
-			</p:panel>
+		<p:panel id="releaseSlot" header="Release Slot">
+			<h:form id="frm6">
+				<p:outputLabel for="inpTxtReleaseTkn" value="Enter Token No" />
+				<p:inputText id="inpTxtReleaseTkn"
+					value="#{releaseSlotBean.tokenNo}" required="true"
+					requiredMessage="Please Enter Token Number" />
+				<p:commandButton id="btnReleaseSlot" value="Release Slot"
+					action="#{releaseSlotBean.releaseSlot}" style="width:100%"
+					update="msgs releaseSlot" />
+			</h:form>
+		</p:panel>
+	</p:dashboard>
 
-			<p:panel id="releaseSlot" header="Release Slot">
-				<p:outputLabel for="ofTokenRelease" value="Enter Token No " />
-				<p:inputText id="ofTokenRelease" value="#{rushMgmtView.onToken}" />
-				<p:commandButton type="button" value="Release Slot"
-					style="width:100%" />
-			</p:panel>
-		</p:dashboard>
+	<p:dialog header="Available Slots" widgetVar="dlg4" minHeight="40"
+		showEffect="fade" width="790" modal="true">
+		<h:form id="frm8">
+			<p:outputLabel value="Total person's allowed at a time : " />
+			<p:tag styleClass="p-mr-2" severity="success"
+				value="#{availableSlotBean.totalSlots}" />
+			<p:outputLabel value="Slots available at selected time : "
+				style="margin-left:20px;" />
+			<p:tag styleClass="p-mr-2" severity="info"
+				value="#{availableSlotBean.availableSlots}" />
+			<p:outputPanel deferred="true" id="oPavailSlot"
+				style="margin-top:10px">
+				<p:repeat value="#{availableSlotBean.lstAvailableSlots}" var="slots">
+					<p:commandButton id="btnbookslot" value="#{slots.availSlot}"
+						styleClass="ui-button-outlined ui-button-warning"
+						actionListener="#{availableSlotBean.bookSlot}"
+						style="margin:5px 5px 0 0;width:70px; font-size:80%"
+						process="@this" update="frm7:dpbsOnTime2"
+						onclick="PF('dlg3').show()" />
+				</p:repeat>
+			</p:outputPanel>
+		</h:form>
+	</p:dialog>
 
-		<div style="clear: both" />
-	</h:form>
+	<p:dialog header="Book Slot" widgetVar="dlg3" minHeight="40"
+		width="350" showEffect="fade" modal="true">
+		<h:form id="frm7">
+			<p:outputLabel for="inpTxtbsOnName2" value="Enter Your Name" />
+			<p:inputText id="inpTxtbsOnName2" required="true"
+				requiredMessage="Please Enter Your Name"
+				value="#{bookSlotOnlineBean.onName}" />
+			<p:outputLabel for="inpTxtbsOnMob2" value="Mobile No" />
+			<p:inputNumber thousandSeparator="" padControl="false"
+				required="true" requiredMessage="Please Enter Mobile No"
+				id="inpTxtbsOnMob2" value="#{bookSlotOnlineBean.onMob}" />
+			<p:outputLabel for="dpbsOnTime2" value="Booking Time" />
+			<p:datePicker id="dpbsOnTime2" value="#{bookSlotOnlineBean.booktime}"
+				required="true" requiredMessage="Please Select Booking Time"
+				showButtonBar="true" showTime="true"
+				style="width:100%; margin-bottom:30px" disabled="true" />
+			<p:commandButton id="btnBookOnlineSlot2" value="Confirm"
+				action="#{bookSlotOnlineBean.bookSlot}"
+				style="width: 90px; float:right" update="msgs bookSlotOnline" />
+			<p:commandButton type="button" value="Cancel"
+				styleClass="ui-button-flat p-mr-2" style="width: 90px; float:right"
+				onclick="PF('dlg3').hide()" />
+
+		</h:form>
+	</p:dialog>
+
+	<div style="clear: both" />
+
 
 </h:body>
 </html>

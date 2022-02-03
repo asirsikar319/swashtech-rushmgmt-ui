@@ -4,17 +4,17 @@ import java.util.Date;
 
 public class Slots {
 
-	private Date availSlot;
+	private String availSlot;
 
-	public Slots(Date availSlot) {
+	public Slots(String availSlot) {
 		this.availSlot = availSlot;
 	}
 
-	public Date getAvailSlot() {
+	public String getAvailSlot() {
 		return availSlot;
 	}
 
-	public void setAvailSlot(Date availSlot) {
+	public void setAvailSlot(String availSlot) {
 		this.availSlot = availSlot;
 	}
 

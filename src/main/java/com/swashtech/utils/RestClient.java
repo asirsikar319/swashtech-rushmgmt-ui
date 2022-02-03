@@ -10,39 +10,75 @@ import java.net.URL;
 
 public class RestClient {
 
-	public String callRestApi(String endpoint, String type, String input) {
+	public String callPOSTApi(String endpoint, String input) {
 		String response = null;
 		try {
 			System.err.println("endpoint : " + endpoint);
 			URL url = new URL(endpoint);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
-			conn.setRequestMethod(type);
+			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
-			
-			System.err.println("input : "+input);
-			
+			System.err.println("input : " + input);
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
 			os.flush();
-
-			System.err.println("conn.getResponseCode() : "+conn.getResponseCode());
-//			if (conn.getResponseCode() != 200) {
-//				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-//			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			System.err.println("conn.getResponseCode() : " + conn.getResponseCode());
+			BufferedReader br;
+			if(conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
+				 br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			}else {
+				br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+			}
 
 			String output;
-			System.out.println("Output from Server .... \n");
 			while ((output = br.readLine()) != null) {
 				response = output;
 			}
 			conn.disconnect();
 
 		} catch (MalformedURLException e) {
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
 			e.printStackTrace();
 		} catch (IOException e) {
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	public String callPUTApi(String endpoint, String input) {
+		String response = null;
+		try {
+			System.err.println("endpoint : " + endpoint);
+			URL url = new URL(endpoint);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("PUT");
+			conn.setRequestProperty("Content-Type", "application/json");
+			System.err.println("input : " + input);
+			OutputStream os = conn.getOutputStream();
+			os.write(input.getBytes());
+			os.flush();
+			System.err.println("conn.getResponseCode() : " + conn.getResponseCode());
+			BufferedReader br;
+			if(conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
+				 br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			}else {
+				br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+			}
+
+			String output;
+			while ((output = br.readLine()) != null) {
+				response = output;
+			}
+			conn.disconnect();
+
+		} catch (MalformedURLException e) {
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
+			e.printStackTrace();
+		} catch (IOException e) {
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
 			e.printStackTrace();
 		}
 		return response;
