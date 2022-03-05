@@ -50,7 +50,7 @@ public class BookSlotOfflineBean implements Serializable {
 				message = new FacesMessage(FacesMessage.SEVERITY_INFO, tokenNo,
 						"Please share token number to visitor!");
 			} else {
-				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, tokenNo!=null?tokenNo:"Error", responseObject.getString("message"));
+				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", responseObject.getString("message"));
 			}
 			rushMgmtView.addMessage(message);
 			onName = null;

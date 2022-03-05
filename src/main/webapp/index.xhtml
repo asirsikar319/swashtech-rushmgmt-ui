@@ -9,7 +9,7 @@
 	<title>Rush Management System</title>
 	<h:outputScript name="test.js" />
 </h:head>
-<h:body>
+<h:body style="zoom:95%;">
 	<style type="text/css">
 .ui-dashboard {
 	display: flex;
@@ -25,7 +25,7 @@
 	margin: 10px;
 }
 
-.ui-inputfield {
+.ui-inputfield, .ui-selectonemenu {
 	font-weight: normal;
 	width: 100%;
 	margin: 5px 0 10px 0;
@@ -59,7 +59,7 @@
 				<p:datePicker id="dpavSTime" value="#{availableSlotBean.timestamp}"
 					required="true" requiredMessage="Please Select Date"
 					showTime="true" style="width:100%"
-					mindate="#{availableSlotBean.minDate}" 
+					mindate="#{availableSlotBean.minDate}"
 					maxdate="#{availableSlotBean.maxDate}" />
 				<p:commandButton id="btnSearchSlot" value="Search"
 					style="width:100%" action="#{availableSlotBean.retrieveSlots}"
@@ -80,8 +80,8 @@
 				<p:outputLabel for="dpbsOnTime" value="Select Booking Time" />
 				<p:datePicker id="dpbsOnTime" value="#{bookSlotOnlineBean.booktime}"
 					required="true" requiredMessage="Please Select Booking Time"
-					showButtonBar="true" showTime="true" style="width:100%"
-					pattern="dd/MM/yyyy HH:mm:ss.SSS" />
+					showButtonBar="false" showTime="true" style="width:100%"
+					pattern="dd/MM/yyyy HH:mm:ss" />
 				<p:commandButton id="btnBookOnlineSlot" value="Book Slot"
 					action="#{bookSlotOnlineBean.bookSlot}" style="width:100%"
 					update="msgs bookSlotOnline" />
@@ -137,7 +137,50 @@
 					update="msgs releaseSlot" />
 			</h:form>
 		</p:panel>
+
+		<p:panel id="slotsReport" header="Slots Report">
+			<h:form id="frm10">
+				<p:outputLabel for="frDate" value="From Date / Time" />
+				<p:datePicker id="frDate" value="#{slotReportBean.frdate}"
+					required="true" requiredMessage="Please Select From Date"
+					showTime="true" style="width:100%" />
+				<p:outputLabel for="toDate" value="To Date / Time" />
+				<p:datePicker id="toDate" value="#{slotReportBean.todate}"
+					required="true" requiredMessage="Please Select To Date"
+					showTime="true" style="width:100%" />
+				<p:outputLabel for="somMode" value="Mode" />
+				<p:selectOneMenu id="somMode" value="#{slotReportBean.mode}" style="width:100%">
+                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                    <f:selectItem itemLabel="Online" itemValue="online"/>
+                    <f:selectItem itemLabel="Offline" itemValue="offline"/>
+                </p:selectOneMenu>
+				<p:selectBooleanCheckbox value="#{slotReportBean.enter}" itemLabel="is Enter" style="width:50%; margin-bottom:10px"/>
+				<p:selectBooleanCheckbox value="#{slotReportBean.exit}" itemLabel="is Exit" style="width:50%; margin-bottom:10px"/>
+				<p:commandButton id="btnSearchSlot" value="Search Slots"
+					style="width:100%" action="#{slotReportBean.retrieveSlots}"
+					update="msgs frm9" />
+			</h:form>
+		</p:panel>
+
 	</p:dashboard>
+
+	<p:dialog header="Slots" widgetVar="dlg5" minHeight="40"
+		showEffect="fade" modal="true" width="80%">
+		<h:form id="frm9">
+			<p:dataTable id="jh54" var="rm" value="#{slotReportBean.lstReport}" rows="8" paginator="true">
+				<p:column field="tokenNo" headerText="Token No" width="260" />
+				<p:column field="name" headerText="Name" width="260"/>
+				<p:column field="mobile" headerText="Mobile No" />
+				<p:column field="mode" headerText="Mode" />
+				<p:column field="entryDateTime" headerText="Entry Time"
+					sortable="false" filterable="false" />
+				<p:column field="enter" headerText="Enter" />
+				<p:column field="exitDateTime" headerText="Exit Time"
+					sortable="false" filterable="false" />
+				<p:column field="exit" headerText="Exit" />
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
 
 	<p:dialog header="Available Slots" widgetVar="dlg4" minHeight="40"
 		showEffect="fade" width="790" modal="true">

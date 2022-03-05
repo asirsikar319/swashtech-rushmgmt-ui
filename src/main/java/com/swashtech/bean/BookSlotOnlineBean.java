@@ -57,7 +57,7 @@ public class BookSlotOnlineBean implements Serializable {
 				message = new FacesMessage(FacesMessage.SEVERITY_INFO, tokenNo,
 						"Please use above token number at the time of visit!");
 			} else {
-				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, tokenNo!=null?tokenNo:"Error", responseObject.getString("message"));
+				message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", responseObject.getString("message"));
 			}
 			rushMgmtView.addMessage(message);
 			PrimeFaces current = PrimeFaces.current();

@@ -48,14 +48,16 @@ public class RushMgmtView implements Serializable {
 		DashboardColumn column2 = new DefaultDashboardColumn();
 		DashboardColumn column3 = new DefaultDashboardColumn();
 
-		column1.addWidget("availableSlots");
 		column1.addWidget("bookSlotOnline");
+		column1.addWidget("bookSlotOffline");
 
 		column2.addWidget("updateSlot");
 		column2.addWidget("cancelSlot");
+		column2.addWidget("releaseSlot");
 		
-		column3.addWidget("bookSlotOffline");
-		column3.addWidget("releaseSlot");
+		column3.addWidget("availableSlots");
+		column3.addWidget("slotsReport");
+		
 
 		model.addColumn(column1);
 		model.addColumn(column2);

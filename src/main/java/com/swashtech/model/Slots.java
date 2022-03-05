@@ -1,7 +1,5 @@
 package com.swashtech.model;
 
-import java.util.Date;
-
 public class Slots {
 
 	private String availSlot;
