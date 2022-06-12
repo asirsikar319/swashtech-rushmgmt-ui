@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-alpine
-ARG JAR_FILE=swashtech-rushmgmt-ui-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=swashtech-rushmgmt-ui-1.0-SNAPSHOT.war
 WORKDIR /
-COPY ${JAR_FILE} app.jar
+COPY ${JAR_FILE} app.war
 ENTRYPOINT ["java","-jar","app.jar"]
