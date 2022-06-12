@@ -8,6 +8,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
 public class RestClient {
 
 	public String callPOSTApi(String endpoint, String input) {
@@ -25,9 +29,9 @@ public class RestClient {
 			os.flush();
 			System.err.println("conn.getResponseCode() : " + conn.getResponseCode());
 			BufferedReader br;
-			if(conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
-				 br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-			}else {
+			if (conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
+				br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			} else {
 				br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
 			}
 
@@ -38,10 +42,12 @@ public class RestClient {
 			conn.disconnect();
 
 		} catch (MalformedURLException e) {
-			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n"
+					+ "}";
 			e.printStackTrace();
 		} catch (IOException e) {
-			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n"
+					+ "}";
 			e.printStackTrace();
 		}
 		return response;
@@ -62,9 +68,9 @@ public class RestClient {
 			os.flush();
 			System.err.println("conn.getResponseCode() : " + conn.getResponseCode());
 			BufferedReader br;
-			if(conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
-				 br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-			}else {
+			if (conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
+				br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			} else {
 				br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
 			}
 
@@ -75,10 +81,59 @@ public class RestClient {
 			conn.disconnect();
 
 		} catch (MalformedURLException e) {
-			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n"
+					+ "}";
 			e.printStackTrace();
 		} catch (IOException e) {
-			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n" + "}";
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n"
+					+ "}";
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	public String callGETApi(String endpoint) {
+		String response = null;
+		try {
+
+			javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
+				public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+					if (hostname.equals("localhost")) {
+						return true;
+					}
+					return false;
+				}
+			});
+
+			System.err.println("endpoint : " + endpoint);
+			URL url = new URL("https://localhost:8443/admin");
+			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+			SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+			conn.setSSLSocketFactory(sslsocketfactory);
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			System.err.println("conn.getResponseCode() : " + conn.getResponseCode());
+			BufferedReader br;
+			if (conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
+				br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+			} else {
+				br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+			}
+
+			String output;
+			while ((output = br.readLine()) != null) {
+				response = output;
+			}
+			conn.disconnect();
+
+		} catch (MalformedURLException e) {
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n"
+					+ "}";
+			e.printStackTrace();
+		} catch (IOException e) {
+			response = "{\r\n" + "    \"message\": \"Internal Server Error\",\r\n" + "    \"status\": \"Error\"\r\n"
+					+ "}";
 			e.printStackTrace();
 		}
 		return response;

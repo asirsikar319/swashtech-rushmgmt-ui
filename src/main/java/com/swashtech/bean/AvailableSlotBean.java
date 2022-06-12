@@ -74,6 +74,10 @@ public class AvailableSlotBean implements Serializable {
 			});
 			PrimeFaces current = PrimeFaces.current();
 			current.executeScript("PF('dlg4').show();");
+			
+			String response2 = restClient.callGETApi(null);
+			System.err.println("response2 : "+response2);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

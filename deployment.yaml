@@ -1,0 +1,74 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: swashtech-rushmgmt-ui
+  namespace: swashtech
+  selfLink: /apis/apps/v1/namespaces/swashtech/deployments/swashtech-rushmgmt-ui
+  labels:
+    run: swashtech-rushmgmt-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: swashtech-rushmgmt-ui
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: swashtech-rushmgmt-ui
+    spec:
+      volumes:
+        - name: application-config
+          configMap:
+            name: swashtech-rushmgmt-ui
+            items:
+              - key: config.properties
+                path: config.properties
+            defaultMode: 420
+      containers:
+        - name: swashtech-rushmgmt-ui
+          image: asirsikar319/swashtech-rushmgmt-ui
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: JAVA_OPTS
+              value: '-Dspring.config.location=/config'
+          resources: {}
+          volumeMounts:
+            - name: application-config
+              mountPath: /config
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+  
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: swashtech-rushmgmt-ui
+  namespace: swashtech
+  labels:
+    run: swashtech-rushmgmt-ui
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30698
+  selector:
+    run: swashtech-rushmgmt-ui
+  type: NodePort
