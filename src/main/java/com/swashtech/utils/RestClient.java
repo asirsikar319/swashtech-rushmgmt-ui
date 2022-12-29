@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -23,6 +24,9 @@ public class RestClient {
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("st-transid", UUID.randomUUID().toString());
+			
+			System.err.println("st-transid : " + conn.getRequestProperty("st-transid"));
 			System.err.println("input : " + input);
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
@@ -62,6 +66,9 @@ public class RestClient {
 			conn.setDoOutput(true);
 			conn.setRequestMethod("PUT");
 			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("st-transid", UUID.randomUUID().toString());
+			
+			System.err.println("st-transid : " + conn.getRequestProperty("st-transid"));
 			System.err.println("input : " + input);
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
@@ -106,13 +113,15 @@ public class RestClient {
 			});
 
 			System.err.println("endpoint : " + endpoint);
-			URL url = new URL("https://localhost:8443/admin");
+			URL url = new URL(endpoint);
 			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 			SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 			conn.setSSLSocketFactory(sslsocketfactory);
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("st-transid", UUID.randomUUID().toString());
 
+			System.err.println("st-transid : " + conn.getRequestProperty("st-transid"));
 			System.err.println("conn.getResponseCode() : " + conn.getResponseCode());
 			BufferedReader br;
 			if (conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {

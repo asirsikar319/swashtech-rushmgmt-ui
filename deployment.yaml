@@ -68,7 +68,7 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30698
+      nodePort: 30699
   selector:
     run: swashtech-rushmgmt-ui
   type: NodePort
